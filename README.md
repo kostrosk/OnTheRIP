@@ -20,25 +20,32 @@ An unknown title, year, or episode does not stop preservation. It does stop an u
 
 ## Repeat the process
 
-The private pilot uses a PowerShell launcher with a configured release, storage paths, and installed media tools.
-This repository does not distribute that launcher or the implementation. These examples describe its interface, not an installation procedure.
+This repository includes [start-ontherip.ps1](start-ontherip.ps1), a reusable PowerShell launcher.
+It needs an existing private engine, its configured JSON file, Python, and the installed capture tools.
+The launcher does not install or distribute those components.
 
-On a configured Windows computer, in PowerShell, from the folder that contains the private launcher:
+Download this repository's two files into one folder. Use your actual private engine and configuration paths below.
+The configuration controls archive destinations, playable destinations, and tool paths.
+The commands start real capture when the engine supports the inserted disc.
 
-```powershell
-.\start-ontherip.ps1 -Drive 'E:'
-```
-
-This command processes one disc through the configured workflow.
-A failed or unsupported stage reports its cause. Inspect that result before another attempt.
-
-For the intended continuous foreground workflow, the launcher also accepts:
+On your configured Windows computer, in PowerShell, from the folder that contains `start-ontherip.ps1`:
 
 ```powershell
-.\start-ontherip.ps1 -Drive 'E:' -Watch
+.\start-ontherip.ps1 -ProgramPath 'D:\YourPrivateInstall\scripts\portable-disc-workflow.py' -ConfigPath 'D:\YourPrivateInstall\config.json' -Drive 'E:'
 ```
 
-Continuous physical-disc swaps still need acceptance tests. Keep the window open and follow the reported drive status.
+This command processes one disc. Read the reported result before another attempt.
+
+For the intended continuous foreground workflow, use the same parameters with `-Watch`:
+
+```powershell
+.\start-ontherip.ps1 -ProgramPath 'D:\YourPrivateInstall\scripts\portable-disc-workflow.py' -ConfigPath 'D:\YourPrivateInstall\config.json' -Drive 'E:' -Watch
+```
+
+Keep the window open. Exchange discs only after the engine reports that the drive is free.
+Continuous physical-disc swaps still need acceptance tests.
+If Python uses another command or executable path, pass it through `-PythonCommand`.
+The launcher returns the engine's exit code. An unsupported format needs an engine adapter, not another launcher invocation.
 
 ## Results and limits
 
@@ -60,8 +67,8 @@ Playback acceptance remains a separate check.
 
 ## Project status
 
-The implementation and operational details remain private on Forgejo. This public repository contains only this walkthrough.
-There is no downloadable package here yet.
+The implementation and operational details remain private on Forgejo. This public repository contains this walkthrough and the launcher.
+There is no downloadable engine package here yet.
 
 "Data autonomy L2" is our project phrase for verified copies under your control, not a certification.
 Star OnTheRIP to follow the pilots and the path toward a simpler preservation workflow.

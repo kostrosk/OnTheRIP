@@ -1,33 +1,67 @@
 # OnTheRIP
 
-A small disc-preservation workflow for keeping verified copies under your control.
+A simpler media-preservation process. Keep our history before the last readable disc disappears.
 
-## Why this exists
+Some discs never reach a streaming catalog. Obscure films, DVD extras, and older games deserve copies that their owners can keep and check.
 
-Some discs never reach a streaming catalog. Obscure films, DVD extras, and older games can disappear when the last readable copy fails. OnTheRIP aims to make preservation a routine you can repeat.
+OnTheRIP connects existing tools into one foreground workflow. The goal is simple: start the program, insert a disc, and exchange discs when it reports completion.
 
-This project uses "data autonomy L2" as shorthand for keeping verified copies you control. It is a project phrase, not a recognized certification.
+## The workflow
 
-## The planned workflow
+1. Identify the disc from measured evidence.
+2. Select a supported capture tool.
+3. Check the tool's completion and retained output.
+4. Copy the archive to network storage, also called a NAS.
+5. Reread the archive and compare SHA-256 hashes, which detect changed bytes.
+6. Prepare the configured playable copy and check its destination hash.
+7. Report what finished and what still needs attention.
 
-Start the configured program and leave it open. Insert a disc. Exchange physical discs by hand when the program says the drive is free. It identifies the disc from evidence, selects a matching supported tool, and records that tool's actual completion. It copies the archive to network storage, also called a NAS. It rereads the copied files and compares their SHA-256 fingerprints to detect changed bytes.
+An unknown title, year, or episode does not stop preservation. It does stop an unsupported final name or episode assignment.
 
-Next, it copies the verified result to the configured playable destination and compares SHA-256 fingerprints there. It reports the completed stage before the next disc starts. An unknown year or episode does not block an archive. The process must not guess a final television episode mapping.
+## Repeat the process
 
-## Walkthrough states
+The private pilot uses a PowerShell launcher with a configured release, storage paths, and installed media tools.
+This repository does not distribute that launcher or the implementation. These examples describe its interface, not an installation procedure.
 
-**Archive verified, metadata pending** means the archive and its verified NAS copy exist, but the title or episode mapping still needs evidence. The archive can wait in this state.
+On a configured Windows computer, in PowerShell, from the folder that contains the private launcher:
 
-**Fully filed** means the archive, NAS backup, and configured playable copy passed their checks, and the available metadata supports the filing. A notification must describe the stage that actually finished.
+```powershell
+.\start-ontherip.ps1 -Drive 'E:'
+```
 
-## What has passed so far
+This command processes one disc through the configured workflow.
+A failed or unsupported stage reports its cause. Inspect that result before another attempt.
 
-Windows pilots verified automatic GameCube archiving, followed by a playable copy over secure shell (SSH), a hash check, and a visible notice. Two complete DVD archives passed independent NAS hash checks.
+For the intended continuous foreground workflow, the launcher also accepts:
 
-A DVD extraction saved fifteen titles, including short extras. Strict local verification remains pending. Continuous disc swaps and Linux still need live pilots. Blu-ray, final movie and television filing, and playback remain unverified. These results do not support a claim that every disc format works.
+```powershell
+.\start-ontherip.ps1 -Drive 'E:' -Watch
+```
+
+Continuous physical-disc swaps still need acceptance tests. Keep the window open and follow the reported drive status.
+
+## Results and limits
+
+Windows pilots passed automatic GameCube capture, NAS verification, and a separate verified playable copy with a visible notification.
+Two full DVD archives passed independent checks of every archived file's size and SHA-256 hash.
+
+A DVD extraction retained fifteen titles, including short material. All fifteen existing files passed strict local audio/video decode and packet checks.
+Those checks covered 51 audio/video streams. They do not prove subtitle completeness, every angle, correct episode names, or successful playback.
+
+DVD episode mapping and final Jellyfin library placement remain pending. Linux, Blu-ray, continuous swaps, and universal format support remain unproven.
+An archive ISO is not a claim of decryption or Jellyfin playback support.
+
+## What the notices mean
+
+**Archive verified; metadata pending** means preservation passed, but identification or playable placement remains incomplete.
+
+**Fully filed** means every required destination passed its hash checks and the evidence supports the final names.
+Playback acceptance remains a separate check.
 
 ## Project status
 
-This public repository contains a walkthrough. The implementation remains private and experimental. There is no downloadable package or installation command here.
+The implementation and operational details remain private on Forgejo. This public repository contains only this walkthrough.
+There is no downloadable package here yet.
 
-Star OnTheRIP to follow the preservation pilots and the path toward a simpler disc workflow.
+"Data autonomy L2" is our project phrase for verified copies under your control, not a certification.
+Star OnTheRIP to follow the pilots and the path toward a simpler preservation workflow.

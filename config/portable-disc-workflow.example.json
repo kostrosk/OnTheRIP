@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "state_file": "~/.local/state/ontherip/events.jsonl",
+  "lock_dir": "~/.local/state/ontherip/locks",
+  "capture_root": null,
+  "inspection_root": null,
+  "backup_root": null,
+  "platforms": {
+    "dvd_video": {
+      "backup_root": null,
+      "note": "Set an absolute local path for capture_root and a separate archive path before DVD preservation."
+    },
+    "gamecube": {
+      "backup_root": null,
+      "playable": null
+    },
+    "wii": {
+      "backup_root": null,
+      "playable": null
+    }
+  },
+  "naming_template": "{title}.{platform}.{title_id}.Disc{disc_number}.Rev{revision}",
+  "suppressed_fingerprints": [],
+  "tools": {
+    "ps3_gui": null,
+    "redumper": null,
+    "makemkv": null,
+    "ffprobe": null,
+    "ffmpeg": null,
+    "vlc": null
+  },
+  "profiles": {
+    "windows": {
+      "enabled": true,
+      "note": "Optical drive discovery and supported Windows DVD, GameCube, and Wii workflow."
+    },
+    "linux": {
+      "enabled": false,
+      "note": "Not accepted for this public release."
+    }
+  }
+}

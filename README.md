@@ -1,74 +1,49 @@
 # OnTheRIP
 
-A simpler media-preservation process. Keep our history before the last readable disc disappears.
+One start replaces repeated manual steps: it selects supported tools, verifies network-storage copies, files configured games, and records completion or pending work. This public export contains the stable dev.13 engine and a generic configuration.
 
-Some discs never reach a streaming catalog. Obscure films, DVD extras, and older games deserve copies that their owners can keep and check.
+## Install
 
-OnTheRIP connects existing tools into one foreground workflow. The goal is simple: start the program, insert a disc, and exchange discs when it reports completion.
+Use Windows 10 or 11 with Python 3.11 or newer. Install external tools separately. For DVD, GameCube, and Wii capture, install the [official redumper b767 Windows x64 build](https://github.com/superg/redumper/releases/download/b767/redumper-b767-windows-x64.zip). The engine requires the SHA-256 pin in `scripts/portable_disc_wii.py` and rejects a different build. Nintendo-specific raw-header reads require OmniDrive firmware v1.0.4 or newer.
 
-## The workflow
+MakeMKV and VLC are optional for DVD metadata and local inspection. This repository does not bundle third-party tools.
 
-1. Identify the disc from measured evidence.
-2. Select a supported capture tool.
-3. Check the tool's completion and retained output.
-4. Copy the archive to network storage, also called a NAS.
-5. Reread the archive and compare SHA-256 hashes, which detect changed bytes.
-6. Prepare the configured playable copy and check its destination hash.
-7. Report what finished and what still needs attention.
-
-An unknown title, year, or episode does not stop preservation. It does stop an unsupported final name or episode assignment.
-
-## Repeat the process
-
-This repository includes [start-ontherip.ps1](start-ontherip.ps1), a reusable PowerShell launcher.
-It needs an existing private engine, its configured JSON file, Python, and the installed capture tools.
-The launcher does not install or distribute those components.
-
-Download this repository's two files into one folder. Use your actual private engine and configuration paths below.
-The configuration controls archive destinations, playable destinations, and tool paths.
-The commands start real capture when the engine supports the inserted disc.
-
-On your configured Windows computer, in PowerShell, from the folder that contains `start-ontherip.ps1`:
+Copy the example configuration to the ignored local file:
 
 ```powershell
-.\start-ontherip.ps1 -ProgramPath 'D:\YourPrivateInstall\scripts\portable-disc-workflow.py' -ConfigPath 'D:\YourPrivateInstall\config.json' -Drive 'E:'
+Copy-Item config/portable-disc-workflow.example.json config/local.json
 ```
 
-This command processes one disc. Read the reported result before another attempt.
+Edit `config/local.json` before capture. Set `capture_root` and `inspection_root` to absolute local Windows paths. Set each archive `backup_root` to a separate destination. Set game `playable` fields to `{"host":"user@host.example","directory":"/absolute/library/gc"}` or the matching Wii path. Game filing requires SSH access and Python 3 on the target. Without a configured destination, the archive can remain verified while filing stays pending. Set installed executable paths under `tools`. Keep unused destinations and tools as `null`. The example contains no suppression rules.
 
-For the intended continuous foreground workflow, use the same parameters with `-Watch`:
+## Check and run
+
+From the repository folder, inspect one drive without capture first:
 
 ```powershell
-.\start-ontherip.ps1 -ProgramPath 'D:\YourPrivateInstall\scripts\portable-disc-workflow.py' -ConfigPath 'D:\YourPrivateInstall\config.json' -Drive 'E:' -Watch
+python scripts/portable-disc-workflow.py --config config/local.json probe --drive E:
 ```
 
-Keep the window open. Exchange discs only after the engine reports that the drive is free.
-Continuous physical-disc swaps still need acceptance tests.
-If Python uses another command or executable path, pass it through `-PythonCommand`.
-The launcher returns the engine's exit code. An unsupported format needs an engine adapter, not another launcher invocation.
+Review the identity and blockers. Then run the bundled launcher for one disc:
 
-## Results and limits
+```powershell
+.\start-ontherip.ps1 -Drive E:
+```
 
-Windows pilots passed automatic GameCube capture, NAS verification, and a separate verified playable copy with a visible notification.
-Two full DVD archives passed independent checks of every archived file's size and SHA-256 hash.
+For foreground watch mode, use:
 
-A DVD extraction retained fifteen titles, including short material. All fifteen existing files passed strict local audio/video decode and packet checks.
-Those checks covered 51 audio/video streams. They do not prove subtitle completeness, every angle, correct episode names, or successful playback.
+```powershell
+.\start-ontherip.ps1 -Drive E: -Watch
+```
 
-DVD episode mapping and final Jellyfin library placement remain pending. Linux, Blu-ray, continuous swaps, and universal format support remain unproven.
-An archive ISO is not a claim of decryption or Jellyfin playback support.
+The launcher starts capture when a configured adapter matches. Exchange discs only after it reports that the drive is free. Stop watch mode with `Ctrl+C`.
 
-## What the notices mean
+## Supported scope
 
-**Archive verified; metadata pending** means preservation passed, but identification or playable placement remains incomplete.
+This release targets Windows DVD preservation and GameCube or Wii capture. It preserves guarded dry-probe and tool-hash checks. A configured PS3 tool can only open its GUI. The program does not verify PS3 capture completion. Blu-ray, Linux capture, continuous disc-swap acceptance, and automatic episode filing are not accepted.
 
-**Fully filed** means every required destination passed its hash checks and the evidence supports the final names.
-Playback acceptance remains a separate check.
+A prior private pilot reported 15 of 15 DVD titles passing strict local audio/video checks. Those checks covered 51 audio/video streams. They did not prove subtitle completeness, every angle, correct episode mapping, or successful playback. That result does not prove acceptance for this sanitized public build or another computer. Run a dry probe before capture and review each result.
 
-## Project status
+## Provenance
 
-The implementation and operational details remain private on Forgejo. This public repository contains this walkthrough and the launcher.
-There is no downloadable engine package here yet.
-
-"Data autonomy L2" is our project phrase for verified copies under your control, not a certification.
-Star OnTheRIP to follow the pilots and the path toward a simpler preservation workflow.
+The public version is `0.1.0-dev.13-public.1`. `NOTICE.md` records source references, adaptations, and excluded third-party tools. The public tree contains generalized code only. It does not contain project history, test fixtures, sample payloads, or binaries.

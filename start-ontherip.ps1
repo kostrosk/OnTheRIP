@@ -1,10 +1,9 @@
+# SPDX-License-Identifier: GPL-3.0-only
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true)]
-    [string]$ProgramPath,
+    [string]$ProgramPath = (Join-Path $PSScriptRoot 'scripts/portable-disc-workflow.py'),
 
-    [Parameter(Mandatory = $true)]
-    [string]$ConfigPath,
+    [string]$ConfigPath = (Join-Path $PSScriptRoot 'config/local.json'),
 
     [ValidatePattern('^[A-Za-z]:$')]
     [string]$Drive = 'E:',

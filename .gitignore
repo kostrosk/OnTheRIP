@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+config/local*.json
+config/private*.json
+capture/
+inspection/
+state/
+*.iso
+*.mkv
+*.sdram
+*.state
+*.log
